@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>FHIR Condition 上傳</title>
+
+  <script src="setting.js"></script>
+  <script src="Cookie.js"></script>
+  <script src="dateTime.js"></script>
+  <script src="HTTP2024.js"></script>
+
+  <script>
+    //condition.js
+    var conditionObj =
+    {
+      "resourceType": "Observation",
+      "id": "ExampleEVSDaysPerWeek",
+      "text": {
+        "status": "generated",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: Observation</b><a name=\"ExampleEVSDaysPerWeek\"> </a></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Observation &quot;ExampleEVSDaysPerWeek&quot; </p></div><p><b>status</b>: final</p><p><b>category</b>: Activity <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"http://terminology.hl7.org/5.0.0/CodeSystem-observation-category.html\">Observation Category Codes</a>#activity)</span>, Physical Activity <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"CodeSystem-pa-temporary-codes.html\">Temporary Codes</a>#PhysicalActivity)</span></p><p><b>code</b>: How many days per week did you engage in moderate to strenuous physical activity in the last 30 days <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"https://loinc.org/\">LOINC</a>#89555-7)</span></p><p><b>subject</b>: <a href=\"http://example.org/Patient/1\">http://example.org/Patient/1: Example Patient</a></p><p><b>effective</b>: 2022-06-08</p><p><b>performer</b>: <a href=\"http://example.org/Patient/1\">http://example.org/Patient/1: Example Patient</a></p><p><b>value</b>: 3 days per week<span style=\"background: LightGoldenRodYellow\"> (Details: UCUM code d/wk = 'd/wk')</span></p></div>"
+      },
+      "status": "final",
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+              "code": "activity"
+            }
+          ]
+        },
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/us/physical-activity/CodeSystem/pa-temporary-codes",
+              "code": "PhysicalActivity"
+            }
+          ]
+        }
+      ],
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "89555-7",
+            "display": "How many days per week did you engage in moderate to strenuous physical activity in the last 30 days"
+          }
+        ]
+      },
+      "subject": {
+        "reference": "Patient/25016670",
+        "display": "瑋婕"
+      },
+      "effectiveDateTime": "2022-06-08",
+      "performer": [
+        {
+          "reference": "Patient/25016670",
+          "display": "瑋婕"
+        }
+      ],
+      "valueQuantity": {
+        "value": 3,
+        "unit": "days per week",
+        "system": "http://unitsofmeasure.org",
+        "code": "d/wk"
+      }
+    }
+    function postData() {
+      conditionObj.valueQuantity.value = document.getElementById("value").value;
+      conditionObj.effectiveDateTime = getFormattedTime();
+      var jsonStr = JSON.stringify(conditionObj);
+      var apiURL = FHIRrootURL + "Observation?subject=25016670";
+      sendHttpPost(apiURL, jsonStr, callBack);
+    }
+
+    function callBack(ret) {
+      console.log(ret);
+    }
+  </script>
+
+</head>
+
+<body style="height: 780px">
+
+  <h1>FHIR Observation 上傳</h1>
+
+  <form id="conditionForm">
+    <p>每週運動生命徵像天數</p>
+
+    <label>
+      天數:
+      <input type="text" id="value" name="username">
+    </label>
+    <p></p>
+    <button type="button" onclick="postData()">上傳 Observation</button><br /><br />
+  </form>
+
+  <!-- Code injected by live-server -->
+  <script>
+    // <![CDATA[  <-- For SVG support
+    if ('WebSocket' in window) {
+      (function () {
+        function refreshCSS() {
+          var sheets = [].slice.call(document.getElementsByTagName("link"));
+          var head = document.getElementsByTagName("head")[0];
+          for (var i = 0; i < sheets.length; ++i) {
+            var elem = sheets[i];
+            var parent = elem.parentElement || head;
+            parent.removeChild(elem);
+            var rel = elem.rel;
+            if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+              var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+              elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+            }
+            parent.appendChild(elem);
+          }
+        }
+        var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+        var address = protocol + window.location.host + window.location.pathname + '/ws';
+        var socket = new WebSocket(address);
+        socket.onmessage = function (msg) {
+          if (msg.data == 'reload') window.location.reload();
+          else if (msg.data == 'refreshcss') refreshCSS();
+        };
+        if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+          console.log('Live reload enabled.');
+          sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+        }
+      })();
+    }
+    else {
+      console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+    }
+    // ]]>
+  </script>
+</body>
+
+</html>
